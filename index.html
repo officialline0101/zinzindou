@@ -374,7 +374,7 @@
             if (!date1) return alert('第1希望日時を入力してください。');
 
             // 送信メッセージ作成
-            const msgText = `【見積り依頼フォーム】\n店舗名：陣陣堂\n\n《お客様名》\n${name}\n\n《電話番号》\n${phone}\n\n《ご要望》\n${selectedRequest}\n\n《希望日時》\n第1：${formatDateTime(date1)}\n第2：${formatDateTime(date2)}\n第3：${formatDateTime(date3)}\n\n《ご質問・詳細》\n${message || 'なし'}`;
+            const msgText = `【見積り依頼フォーム】\n《お客様名》\n${name}\n\n《電話番号》\n${phone}\n\n《ご要望》\n${selectedRequest}\n\n《希望日時》\n第1：${formatDateTime(date1)}\n第2：${formatDateTime(date2)}\n第3：${formatDateTime(date3)}\n\n《ご質問・詳細》\n${message || 'なし'}`;
 
             if (!liff.isInClient()) {
                 alert('この機能はLINEアプリ内でのみ動作します。\n\n' + msgText);
