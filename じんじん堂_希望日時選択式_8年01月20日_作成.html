@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>予約フォーム</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        /* 右端の細いナビ（固定） */
+        .side-nav {
+            position: fixed;
+            /* 画面スクロールしても固定 */
+            right: -5px;
+            /* さらに右へ */
+            top: 80%;
+            /* 画面中央に固定 */
+            transform: translateY(-50%) translateX(16px);
+            /* 中央配置と右ずらし */
+            background: #45c4b7;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4px;
+            border-radius: 10px 0 0 10px;
+            z-index: 1000;
+            width: 35px;
+            /* さらに細く */
+        }
+
+        .side-nav a:active {
+            transform: scale(1.0);
+            /* タップした後に元のサイズに戻す */
+        }
+
+        .side-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            font-size: 10px;
+            margin: 5px 0;
+            padding: 5px;
+            transition: background 0.3s, transform 0.2s;
+            border-radius: 5px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+
+        .side-nav a span {
+            font-size: 24px;
+            /* 矢印をさらに大きく */
+            position: absolute;
+            left: 2px;
+            /* 左端に寄せる */
+            top: 13px;
+            /* さらに下へ */
+        }
+
+        /* スマホ用の微調整 */
+        @media (max-width: 600px) {
+            .side-nav {
+                right: 2px;
+                /* スマホではさらに右端に */
+                width: 30px;
+                /* もっと細く */
+            }
+
+            .side-nav a {
+                width: 28px;
+                height: 28px;
+            }
+
+            .side-nav a i {
+                font-size: 12px;
+                /* スマホではもっと小さく */
+            }
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            margin: 0;
+            padding-top: 5px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            background-color: #fdfdfd;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 96%;
+            max-width: 500px;
+            padding: 25px;
+            box-sizing: border-box;
+            margin: 0 auto;
+        }
+
+        h1 {
+            background: linear-gradient(135deg, #45c4b7, #45c4b7);
+            color: white;
+            padding: 20px;
+            border-radius: 0 0px 0px 0px;
+            text-align: center;
+            display: block;
+            margin: -20px -15px 20px -15px;
+            font-size: 26px;
+            font-weight: 100;
+            box-shadow: inset 0 -5px 10px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 20px;
+            padding: 3px;
+            font-weight: 400;
+            background-color: #45c4b7;
+            color: #ffffff;
+            border-radius: 0px;
+            font-size: 18px;
+            text-align: center;
+            text-indent: 20px;
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid black;
+            /* 上の線 */
+            border-bottom: 1px solid black;
+            /* 下の線 */
+        }
+
+        .labelkibounitizi {
+            display: block;
+            margin: 10px 0;
+            padding: 3px 0;
+            font-weight: 400;
+            background-color: #45c4b7;
+            color: #ffffff;
+            border-radius: 0px;
+            font-size: 18px;
+            text-align: center;
+            text-indent: 20px;
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+            line-height: 1.2;
+        }
+
+        .labeltyuuou {
+            display: block;
+            margin-bottom: 20px;
+            padding: 3px;
+            background-color: #45c4b7;
+            color: #ffffff;
+            border-radius: 0px;
+            font-size: 18px;
+            text-align: center;
+            text-indent: 0px;
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+        }
+
+        .labelmessezi {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            padding: 3px;
+            background-color: #45c4b7;
+            color: #ffffff;
+            border-radius: 0px;
+            font-size: 18px;
+            text-align: center;
+            text-indent: 0px;
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+        }
+
+        /* 必須マークのスタイル（最終版だけ残す） */
+        .required {
+            color: #ffffff;
+            font-weight: lighter;
+            font-size: 0.6em;
+            margin-left: 5px;
+            vertical-align: 0.8em;
+            background-color: rgb(255, 15, 15);
+            padding: 0 5px;
+            border-radius: 3px;
+            margin-right: 5px;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #555555;
+            border-radius: 3px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: all 0.3s;
+            position: relative;
+            top: -5px;
+        }
+
+        .visit-buttons,
+        .symptoms,
+        .menu-sections,
+        .irradiations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .visit-buttons button,
+        .symptoms button,
+        .menu-sections button,
+        .irradiations button {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #2e2e2e;
+            border-radius: 4px;
+            background-color: #f7f7f7;
+            cursor: pointer;
+            box-sizing: border-box;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .visit-buttons button.active,
+        .symptoms button.active,
+        .menu-sections button.active,
+        .irradiations button.active {
+            background-color: #ffffff;
+            color: #141414;
+        }
+
+        .calendar-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            position: relative;
+            width: 100%;
+        }
+
+        .calendar {
+            flex: 1;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .calendar table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .calendar th,
+        .calendar td {
+            font-size: 12.5px;
+            text-align: center;
+            padding: 5px;
+            cursor: pointer;
+            vertical-align: top;
+            width: auto;
+            box-sizing: border-box;
+            border: 1px solid #1a1a1a;
+        }
+
+        .calendar th:first-child,
+        .calendar td:first-child {
+            width: 17%;
+            font-size: 12.5px;
+        }
+
+        .calendar th {
+            background-color: #f7f7f7;
+        }
+
+        .calendar td:hover {
+            background-color: #ddd;
+        }
+
+        .calendar td.selected {
+            background-color: #3e3f41;
+            color: #fff;
+        }
+
+        .available {
+            color: red;
+        }
+
+        .unavailable {
+            background-color: #d3d3d3;
+        }
+
+        .menu-section {
+            display: none;
+        }
+
+        .menu-section.active {
+            display: block;
+        }
+
+        #treatment-text {
+            background-color: #f9f9f9;
+            padding: 16px 20px;
+            border: 1px solid #000000;
+            border-top: none;
+            border-radius: 0 0 3px 3px;
+            margin-top: -13px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            font-size: 15px;
+            line-height: 1.6;
+            color: #000000;
+            text-align: center;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: -6px 0;
+        }
+
+        hr {
+            margin: -5px 0;
+        }
+
+        .edit-button {
+            background-color: #ffffff;
+            color: #1a1a1a;
+            border: 1px solid black;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            white-space: nowrap;
+            width: auto;
+            text-align: center;
+        }
+
+        .edit-button:hover {
+            background-color: #45c4b7;
+            color: #ffffff;
+        }
+
+        /* 100点の予約フォームCSS */
+
+        input:focus,
+        textarea:focus {
+            border-color: #45c4b7;
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+        }
+
+        button {
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background-color: #3e3f41;
+            color: #000000;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background-color: #e9e9e9;
+            transform: scale(1.05);
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            background-color: #45c4b7;
+            margin-top: 12px;
+            color: #fff;
+            /* ← テキストを白にする */
+        }
+
+        .submit-button:hover {
+            background-color: #45c4b7;
+            color: #fff;
+            /* ← ホバー時も白のままにする（任意） */
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            input,
+            button {
+                font-size: 14px;
+            }
+        }
+
+        button.active {
+            outline: 1px solid #2b2b2b;
+            outline-offset: 2px;
+            box-shadow: 0 0 0 3px #45c4b7
+        }
+
+        .datetime-input {
+            width: 100%;
+            padding: 18px;
+            font-size: 18px;
+            border: 1px solid #000000;
+            border-radius: 8px;
+            box-sizing: border-box;
+            background-color: #fff;
+            color: #333;
+            appearance: none;
+            touch-action: manipulation;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .datetime-input:focus {
+            border-color: #007BFF;
+            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
+            outline: none;
+        }
+
+        .small-text {
+            font-size: 22px;
+        }
+
+        /* 日付・時間の横並び */
+        .dt-grid {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .dt-grid .datetime-input {
+            flex: 1 1 50%;
+        }
+
+        @media (max-width: 480px) {
+            .dt-grid {
+                flex-direction: column;
+            }
+        }
+
+        .time-disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 右側の追従ナビ -->
+    <div class="side-nav" id="sideNav">
+        <a href="#section-message">
+            <span>⇩</span>
+            <i class="fas fa-comment"></i>
+        </a>
+    </div>
+
+    <div class="container">
+        <h1>
+            <span class="small-text">店舗名</span><br>
+            予約フォーム
+        </h1>
+
+        <div class="label">お客様名<span class="required">必須</span></div>
+
+        <input type="text" id="name" placeholder="お名前を入力してください" oninput="saveInput('name')">
+
+        <div class="label">電話番号<span class="required">必須</span></div>
+        <input type="tel" id="phone" placeholder="電話番号を入力してください" oninput="saveInput('phone')">
+
+        <div class="label">ご来店回数<span class="required">必須</span></div>
+        <div class="visit-buttons">
+            <button type="button" id="firstVisit" onclick="selectVisit(this)">1回目</button>
+            <button type="button" id="repeatVisit" onclick="selectVisit(this)">2回目以降</button>
+        </div>
+
+        <div id="treatment-text" style="display: none; margin-bottom: 10px;"></div>
+
+        <div class="label" id="course">メニューをお選びください<span class="required">必須</span></div>
+        <div class="symptoms">
+            <button type="button" onclick="selectSymptom(this, 'treatment1')" data-price="15000">予約</button>
+            <button type="button" onclick="selectSymptom(this, 'treatment2')" data-price="15000">日時変更</button>
+        </div>
+
+        <!-- ② HTML：各ブロックの「日付入力」をラップして“日付を選択”を重ねる -->
+        <div class="labelkibounitizi" id="kibou1">希望日時<span class="required">必須</span></div>
+        <div class="datetime-wrapper" style="text-align: center;">
+            <span class="placeholder" id="placeholder1">⇩タップして日時を入力⇩</span>
+            <!-- 提出/既存処理用：ISO(YYYY-MM-DDTHH:MM) を入れる -->
+            <input type="hidden" id="date1" name="date1">
+            <div class="dt-grid">
+                <!-- 日付も<select>にして時間と同じ見た目 -->
+                <select id="date1_day" class="datetime-input" aria-label="日付を選択"></select>
+                <select id="date1_time" class="datetime-input" aria-label="時間（00/30のみ）"></select>
+            </div>
+        </div>
+
+        <!-- 第二希望日時 -->
+        <div class="labelkibounitizi" id="kibou2">第二希望日時<span class="required">必須</span></div>
+        <div class="datetime-wrapper" style="text-align: center;">
+            <span class="placeholder" id="placeholder2">⇩タップして日時を入力⇩</span>
+            <input type="hidden" id="date2" name="date2">
+            <div class="dt-grid">
+                <select id="date2_day" class="datetime-input" aria-label="日付を選択"></select>
+                <select id="date2_time" class="datetime-input" aria-label="時間（00/30のみ）"></select>
+            </div>
+        </div>
+
+        <!-- 第三希望日時 -->
+        <div class="labelkibounitizi" id="kibou3">第三希望日時<span class="required">必須</span></div>
+        <div class="datetime-wrapper" style="text-align: center;">
+            <span class="placeholder" id="placeholder3">⇩タップして日時を入力⇩</span>
+            <input type="hidden" id="date3" name="date3">
+            <div class="dt-grid">
+                <select id="date3_day" class="datetime-input" aria-label="日付を選択"></select>
+                <select id="date3_time" class="datetime-input" aria-label="時間（00/30のみ）"></select>
+            </div>
+        </div>
+
+        <div class="labelmessezi">メッセージ<br>（質問等お気軽にご記入ください）</div>
+        <textarea id="message" rows="4" placeholder="メッセージを入力してください"></textarea>
+
+        <div class="labeltyuuou">ご予約内容</div>
+        <div id="displayInfo"></div> <!-- ここに選択された情報を表示します -->
+
+        <button class="submit-button" onclick="submitForm()" div id="section-message">予約を行う</button>
+    </div>
+
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script>
+        let visitCount = '';
+        let selectedMenu = '';
+        let selectedSymptom = [];  // 配列として定義
+        let selectedFullDate = '';
+        let currentDate = new Date();
+        let availabilityCache = {};
+        let irradiationsCount = ''; <!-- 選択された症状を格納する変数 -->
+        let totalAmount = 0; // 合計金額を格納する変数
+        let menuPrice = 0; // メニューの価格
+        let optionsPrice = 0; // オプションの合計価格
+
+        document.addEventListener('DOMContentLoaded', function () {
+            liff.init({
+                liffId: '2005254357-zKma9BZk'
+            }).then(() => {
+                console.log('LIFF初期化成功');
+            }).catch((err) => {
+                console.log('LIFF初期化失敗', err);
+            });
+
+            fetchAvailability(currentDate);
+        });
+
+        // 訪問回数ごとの時間設定 (例：初めて=20分、2回目以降=15分)
+        let visitTimes = {
+            '2回目以降〈0分〉': 0
+        };
+
+        let selectedVisitTime = 0; // 訪問回数で選択された時間
+
+        // 訪問回数ごとの時間設定 (例：初めて=20分、2回目以降=15分)
+        let irradiationsTimes = {
+            '美白パック〈30分〉': 0
+        };
+
+        let selectedirradiationsTime = 0; // 訪問回数で選択された時間
+
+        let menuTimes = {
+            'スピードコース〈90分〉': 0
+        };
+
+        let selectedMenuTime = 0;
+
+        // 入力内容をローカルストレージに保存
+        function saveInput(id) {
+            const value = document.getElementById(id).value;
+            localStorage.setItem(id, value);
+        }
+
+        // ページが読み込まれたときに前回の入力内容を復元
+        document.addEventListener('DOMContentLoaded', function () {
+            const savedName = localStorage.getItem('name');
+            const savedPhone = localStorage.getItem('phone');
+
+            if (savedName) document.getElementById('name').value = savedName;
+            if (savedPhone) document.getElementById('phone').value = savedPhone;
+        });
+
+        // スムーズスクロール
+        document.querySelectorAll('.side-nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 20,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // 選択したメニューを保存
+        function saveMenuSelection(menuType) {
+            localStorage.setItem('selectedMenu', menuType);
+        }
+
+        // メニューを選択したときにローカルストレージに保存
+        function showMenu(menuType) {
+            document.querySelectorAll('.menu-section').forEach(section => section.style.display = 'none');
+            document.getElementById(menuType).style.display = 'block';
+            saveMenuSelection(menuType);
+        }
+
+        function applyPreviousSelection() {
+            const savedSymptoms = JSON.parse(localStorage.getItem('selectedSymptoms') || '[]');
+
+            if (savedSymptoms.length === 0) {
+                alert('前回のメニューが見つかりません💦');
+                return;
+            }
+
+            // ✅ ご来店回数を自動で「2回目以降」に設定
+            const repeatVisitButton = document.getElementById('repeatVisit');
+            if (repeatVisitButton) {
+                selectVisit(repeatVisitButton);
+            }
+
+            // ✅ メニュー再選択
+            savedSymptoms.forEach(symptomId => {
+                const symptomButton = document.querySelector(`button[onclick*="selectSymptom"][onclick*="'${symptomId}'"]`);
+                if (symptomButton && !symptomButton.classList.contains('active')) {
+                    symptomButton.click();
+                }
+            });
+
+            // ✅ カレンダーにスクロール
+            const targetElement = document.getElementById('date1');
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // 置き換え版：そのままコピペでOK
+        function formatDateTime(dateTimeString) {
+            if (!dateTimeString) return '無効な日時です';
+            const [dPart, tPart] = dateTimeString.split('T');
+            if (!dPart || !tPart) return '無効な日時です';
+
+            const [year, month, day] = dPart.split('-').map(n => parseInt(n, 10));
+            const [hours, minutes] = tPart.split(':').map(n => parseInt(n, 10));
+
+            if ([year, month, day, hours, minutes].some(n => Number.isNaN(n))) {
+                return '無効な日時です';
+            }
+            return `${year}年${month}月${day}日　${hours}時${String(minutes).padStart(2, '0')}分`;
+        }
+
+        function updateDisplayInfo() {
+            const name = document.getElementById('name').value;
+            const visitCountText = visitCount ? `・<span style="color:#45c4b7;"><strong>ご来店回数</strong></span>：${visitCount}` : '・来店回数が未選択です';
+            const selectedMenuText = selectedMenu ? `<span style="color:#45c4b7;"><strong>【コース】</strong></span><br>・${selectedMenu}` : '・コースが未選択です';
+
+            // メニューが選択されていたら、各メニューを改行して表示
+            const selectedSymptomText = selectedSymptom.length > 0
+                ? `<span style="color:#45c4b7;"><strong>【メニュー】</strong></span><br>・${selectedSymptom.join('<br>')}`
+                : '・メニューが未選択です';
+
+            // オプションが選択されていたら、各オプションを改行して表示
+            const irradiationsText = irradiationsCount
+                ? `<span style="color:#45c4b7;"><strong>【オプション】</strong></span><br>${irradiationsCount.split(', ').join('<br>')}`
+                : '・オプション無し';
+
+            // 所要時間を計算
+            let totalMinutes = selectedMenuTime + selectedirradiationsTime + selectedVisitTime;
+            let hours = Math.floor(totalMinutes / 60);
+            let minutes = totalMinutes % 60;
+
+            // 所要時間の表示形式：○○時間○○分
+            let totalTimeText = `・<span style="color:#45c4b7;"><strong>所要時間</strong></span>：${hours > 0 ? hours + '時間' : ''}${minutes}分`;
+
+            // 合計金額の表示
+            const totalAmountText = `・<span style="color:#45c4b7;"><strong>合計金額</strong></span>：¥${menuPrice + optionsPrice}`;
+
+            // 第1希望日が選択された場合の表示
+            const selectedDate1 = document.getElementById('date1').value;
+            const selectedDate1Text = selectedDate1
+                ? `・<span style="color:#45c4b7;"><strong>第1希望日</strong></span><br>${formatDateTime(selectedDate1)}`
+                : '・第1希望日が未選択です';
+
+            // 第2希望日が選択された場合の表示
+            const selectedDate2 = document.getElementById('date2').value;
+            const selectedDate2Text = selectedDate2
+                ? `・<span style="color:#45c4b7;"><strong>第2希望日</strong></span><br>${formatDateTime(selectedDate2)}`
+                : '・第2希望日が未選択です';
+
+            // 第3希望日が選択された場合の表示
+            const selectedDate3 = document.getElementById('date3').value;
+            const selectedDate3Text = selectedDate3
+                ? `・<span style="color:#45c4b7;"><strong>第3希望日</strong></span><br>${formatDateTime(selectedDate3)}`
+                : '・第3希望日が未選択です';
+
+
+            // 修正ボタン付きのHTMLを作成
+            document.getElementById('displayInfo').innerHTML = `
+        <div class="info-row">
+            <p><span style="color:#45c4b7;"><strong>【お名前】</strong></span><br>・${name}</p>
+            <button class="edit-button" onclick="scrollToElement('name')">修正</button>
+        </div>
+        <hr>
+        <div class="info-row">
+            <p>${visitCountText}</p>
+            <button class="edit-button" onclick="scrollToElement('firstVisit')">修正</button>
+        </div>
+        <hr>
+        <div class="info-row">
+            <p>${selectedSymptomText}</p>
+            <button class="edit-button" onclick="scrollToElement('course');">修正</button>
+        </div>
+        <hr>
+        <div class="info-row">
+            <p>${selectedDate1Text}</p>
+            <button class="edit-button" onclick="scrollToElement('kibou1')">修正</button>
+        </div>
+        <hr>
+        <div class="info-row">
+            <p>${selectedDate2Text}</p>
+            <button class="edit-button" onclick="scrollToElement('kibou2')">修正</button>
+        </div>
+        <hr>
+        <div class="info-row">
+            <p>${selectedDate3Text}</p>
+            <button class="edit-button" onclick="scrollToElement('kibou3')">修正</button>
+        </div>
+        <hr>
+    `;
+        }
+
+        // スクロール関数
+        function scrollToElement(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // 各ボタンや入力フィールドでupdateDisplayInfoを呼び出すようにする
+        document.getElementById('name').addEventListener('input', updateDisplayInfo);
+        document.querySelectorAll('.visit-buttons button').forEach(button => {
+            button.addEventListener('click', updateDisplayInfo);
+        });
+        document.querySelectorAll('.menu-sections button').forEach(button => {
+            button.addEventListener('click', updateDisplayInfo);
+        });
+        document.querySelectorAll('.symptoms button').forEach(button => {
+            button.addEventListener('click', updateDisplayInfo);
+        });
+        document.querySelectorAll('.irradiations button').forEach(button => {
+            button.addEventListener('click', updateDisplayInfo);
+        });
+
+        // 第一希望日、第二希望日、第三希望日でupdateDisplayInfoを呼び出す
+        document.getElementById('date1').addEventListener('change', updateDisplayInfo);
+        document.getElementById('date2').addEventListener('change', updateDisplayInfo);
+        document.getElementById('date3').addEventListener('change', updateDisplayInfo);
+
+        document.querySelectorAll('.symptoms button').forEach(button => {
+            button.addEventListener('click', () => {
+                const calendarContainer = document.querySelector('.calendar-container');
+
+                // 選択されたメニューがあればカレンダーを表示
+                if (document.querySelectorAll('.symptoms button.active').length > 0) {
+                    calendarContainer.style.display = 'block';
+                } else {
+                    // 選択が解除された場合、カレンダーを非表示
+                    calendarContainer.style.display = 'none';
+                }
+            });
+        });
+
+        // 初期状態でカレンダーを非表示にする
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('.calendar-container').style.display = 'none';
+        });
+
+        // 日付セルのクリックイベントで希望日時を更新
+        document.querySelectorAll('.calendar td').forEach(cell => {
+            cell.addEventListener('click', () => {
+                selectDate(cell);
+                updateDisplayInfo();  // 日付を選択したら即座に表示を更新
+            });
+        });
+
+        const JP_WD = ['日', '月', '火', '水', '木', '金', '土'];
+        const pad = n => String(n).padStart(2, '0');
+
+        function toISODateTimeLocal(dayStr, timeStr) {
+            if (!dayStr || !timeStr) return "";
+            return `${dayStr}T${timeStr}`;
+        }
+
+        // 日付セレクト：今日から 'days' 日ぶんの候補を作る（月曜・火曜は除外）
+        function buildDateOptions(selectEl, days = 120, startDate = new Date()) {
+            const d = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+            selectEl.innerHTML = '<option value="" disabled selected>日付を選択</option>';
+
+            for (let i = 0; i < days; i++) {
+                const wd = d.getDay(); // 0=日曜 … 6=土曜
+
+                // ★月曜(1)と火曜(2)はスキップ
+                if (wd !== 1 && wd !== 2) {
+                    const y = d.getFullYear();
+                    const m = pad(d.getMonth() + 1);
+                    const day = pad(d.getDate());
+                    const value = `${y}-${m}-${day}`;
+                    const label = `${y}/${m}/${day}（${JP_WD[wd]}）`;
+
+                    const opt = document.createElement('option');
+                    opt.value = value;
+                    opt.textContent = label;
+                    selectEl.appendChild(opt);
+                }
+
+                d.setDate(d.getDate() + 1);
+            }
+        }
+
+        // 曜日ごとの営業時間設定（0=日曜, 1=月曜, …, 6=土曜）
+        const WEEKLY_HOURS = {
+            0: { start: 10, end: 16 }, // 日曜 10:00〜16:30
+            1: { start: 10, end: 18 }, // 月曜 10:00〜18:30
+            2: { start: 10, end: 18 }, // 火曜 10:00〜18:30
+            3: { start: 10, end: 18 }, // 水曜
+            4: { start: 10, end: 18 }, // 木曜
+            5: { start: 10, end: 18 }, // 金曜
+            6: { start: 10, end: 16 }  // 土曜 10:00〜16:30
+        };
+
+        // 指定曜日の12:00〜の休憩帯を除外（上限を含む）
+        function isBlockedTime(weekday, h, m) {
+            const minutes = h * 60 + m;
+
+            // 平日（月〜金＝1..5）：12:00 <= t <= 13:30
+            if (weekday >= 1 && weekday <= 5) {
+                if (minutes >= 12 * 60 && minutes <= 13 * 60 + 30) return true;
+            }
+
+            // 土日（日=0, 土=6）：12:00 <= t <= 13:00
+            if (weekday === 0 || weekday === 6) {
+                if (minutes >= 12 * 60 && minutes <= 13 * 60) return true;
+            }
+
+            return false;
+        }
+
+        // 時間セレクト生成（曜日ごと）
+        function buildHalfHourOptions(selectEl, weekday) {
+            selectEl.innerHTML = '<option value="" disabled selected>時間を選択</option>';
+
+            // 月曜・火曜は日付自体を出していないが、万一選ばれた場合は時間を出さない
+            if (weekday === 1 || weekday === 2) return;
+
+            const { start, end } = WEEKLY_HOURS[weekday] || { start: 0, end: 23 };
+
+            for (let h = start; h <= end; h++) {
+                for (const m of [0, 30]) {
+                    // ★休憩帯はスキップ（選択肢に出さない）
+                    if (isBlockedTime(weekday, h, m)) continue;
+
+                    const hh = pad(h);
+                    const mm = pad(m);
+                    const opt = document.createElement('option');
+                    opt.value = `${hh}:${mm}`;
+                    opt.textContent = `${hh}:${mm}`;
+                    selectEl.appendChild(opt);
+                }
+            }
+        }
+
+        // 既存の updateHiddenAndPlaceholder にこの1行を追加（表示用更新）
+        function updateHiddenAndPlaceholder(baseId) {
+            const day = document.getElementById(`${baseId}_day`).value;
+            const time = document.getElementById(`${baseId}_time`).value;
+            const hidden = document.getElementById(baseId);
+            const ph = document.getElementById(`placeholder${baseId.slice(-1)}`);
+
+            hidden.value = day && time ? `${day}T${time}` : "";
+
+            if (ph) ph.style.display = hidden.value ? 'none' : '';
+
+            // ★表示用パネルを即更新（存在すれば）
+            if (typeof updateDisplayInfo === 'function') updateDisplayInfo();
+        }
+
+        // 既存 hidden の値（編集時）をセレクトへ復元。日付は範囲外なら一時的に先頭へ追加
+        function restoreIfAny(baseId) {
+            const hidden = document.getElementById(baseId);
+            if (!hidden.value) return;
+            const [d, t] = hidden.value.split('T');
+            const daySel = document.getElementById(`${baseId}_day`);
+            const timeSel = document.getElementById(`${baseId}_time`);
+
+            if (d && ![...daySel.options].some(o => o.value === d)) {
+                const tmp = document.createElement('option');
+                tmp.value = d; tmp.textContent = d.replaceAll('-', '/') + '（選択日）';
+                daySel.insertBefore(tmp, daySel.options[1]); // 先頭のplaceholderの次に追加
+            }
+            if (d) daySel.value = d;
+
+            // 時間はブロック帯の場合、復元されない（選び直しになる）
+            if (t) {
+                const t5 = t.slice(0, 5);
+                // いったん時間候補を生成してから復元を試みる
+                if (d) {
+                    const wd = new Date(d).getDay();
+                    buildHalfHourOptions(timeSel, wd);
+                }
+                if ([...timeSel.options].some(o => o.value === t5)) {
+                    timeSel.value = t5;
+                }
+            }
+        }
+
+        function initPicker(baseId, dateDays = 120) {
+            const daySel = document.getElementById(`${baseId}_day`);
+            const timeSel = document.getElementById(`${baseId}_time`);
+
+            buildDateOptions(daySel, dateDays);
+
+            // 初期状態：まだ日付を選んでいないのでグレー＆非活性風
+            timeSel.innerHTML = '<option value="" selected hidden>時間を選択</option>';
+            timeSel.classList.add('time-disabled');
+
+            daySel.addEventListener('change', () => {
+                const dateVal = daySel.value;
+                if (dateVal) {
+                    const d = new Date(dateVal);
+                    const wd = d.getDay();
+                    buildHalfHourOptions(timeSel, wd);
+                    // 日付を選んだら有効化
+                    timeSel.classList.remove('time-disabled');
+                } else {
+                    // 日付を未選択に戻したら再びグレー＆非活性風
+                    timeSel.innerHTML = '<option value="" selected hidden>時間を選択</option>';
+                    timeSel.classList.add('time-disabled');
+                }
+                updateHiddenAndPlaceholder(baseId);
+            });
+
+            restoreIfAny(baseId);
+
+            timeSel.addEventListener('change', () => updateHiddenAndPlaceholder(baseId));
+            updateHiddenAndPlaceholder(baseId);
+        }
+
+        // 3つ分を初期化
+        ['date1', 'date2', 'date3'].forEach(id => initPicker(id, 120));
+
+        function selectSymptom(button, treatmentId) {
+            // グローバルで用意されている前提の変数・関数：
+            // selectedFullDate, selectedMenuTime, selectedSymptom, menuPrice, menuTimes, currentDate
+            // fetchAvailability(date), updateDisplayInfo()
+
+            // 選択された日時をリセット
+            selectedFullDate = '';
+
+            // ボタンの選択状態をトグル
+            button.classList.toggle('active');
+
+            // 表示用要素取得（存在しない場合は終了）
+            const treatmentText = document.getElementById('treatment-text');
+            if (!treatmentText) return;
+
+            // いまアクティブなボタン一覧を取得
+            let activeButtons = document.querySelectorAll('.symptoms button.active');
+
+            // 同時に1つだけ選べるように調整
+            if (activeButtons.length > 1) {
+                activeButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active'); // クリックしたボタンのみ有効化
+            }
+
+            // 再取得（最終的な状態）
+            activeButtons = document.querySelectorAll('.symptoms button.active');
+            const isSelected = button.classList.contains('active');
+
+            // ローカルストレージの選択状態を保存（選択時のみ保持、解除時は空に）
+            if (isSelected) {
+                localStorage.setItem('selectedSymptoms', JSON.stringify([treatmentId]));
+            } else {
+                localStorage.setItem('selectedSymptoms', JSON.stringify([]));
+            }
+
+            if (activeButtons.length === 0) {
+                // すべてのボタンが非選択の場合は各値をリセットして非表示
+                selectedMenuTime = 0;
+                selectedSymptom = null;
+                menuPrice = 0;
+
+                treatmentText.innerHTML = '';
+                treatmentText.style.display = 'none';
+
+                // カレンダー更新・表示更新
+                fetchAvailability(currentDate);
+                updateDisplayInfo();
+                return;
+            }
+
+            // 選択されたメニューの名前と価格を取得
+            const selectedMenuName = (button.textContent || '').trim();
+            selectedMenuTime = (menuTimes && menuTimes[selectedMenuName]) ? menuTimes[selectedMenuName] : 0;
+            selectedSymptom = [selectedMenuName];
+            menuPrice = parseInt(button.getAttribute('data-price'), 10) || 0;
+
+            console.log('選択されたメニューの時間:', selectedMenuTime);
+
+            // カレンダーを更新
+            fetchAvailability(currentDate);
+
+            // トリートメントテキスト（料金/時間等）を設定
+            let html = '';
+            switch (treatmentId) {
+                case 'treatment1':
+                    html = `<div style="text-align: center;"><strong>初回：5,800円<br>2回目以降：3,800円</strong></div>`;
+                    break;
+                case 'treatment2':
+                    html = ``; // 空 → 非表示にする
+                    break;
+                case 'treatment3':
+                    html = `<div style="text-align: left;"><strong>所要時間：120分</strong><br>※症状によりお時間が前後する場合がございます</div><div style="text-align: right;"><strong>料金：8,700円<br>初診料：＋2,200円</strong></div>`;
+                    break;
+                default:
+                    html = ``; // 定義外は空
+                    break;
+            }
+
+            // HTMLを反映
+            treatmentText.innerHTML = html;
+
+            // 中身が空（タグ除去後に空白のみ or <br>のみ など）なら非表示、あれば表示
+            const hasContent = treatmentText.innerHTML.replace(/<[^>]*>/g, '').trim().length > 0;
+
+            if (hasContent) {
+                // 中身があるときだけ、押したボタン直後に差し込み＆表示
+                if (button.parentNode) {
+                    button.parentNode.insertBefore(treatmentText, button.nextSibling);
+                }
+                treatmentText.style.display = 'block';
+            } else {
+                treatmentText.style.display = 'none';
+            }
+
+            // 表示を更新
+            updateDisplayInfo();
+        }
+
+        function selectirradiations(button) {
+            selectedFullDate = '';
+
+            // トグル
+            button.classList.toggle('active');
+
+            // ✅ 現在アクティブなオプションボタンのみを取得し保存（過去データ無視）
+            const selectedButtons = document.querySelectorAll('.irradiations button.active');
+            const selectedIrradiations = Array.from(selectedButtons).map(btn => btn.id);
+            localStorage.setItem('selectedIrradiations', JSON.stringify(selectedIrradiations));
+
+            // 表示用データ生成
+            const selectedIrradiationsNames = Array.from(selectedButtons).map(btn => btn.innerText);
+            irradiationsCount = selectedIrradiationsNames.join(', ');
+
+            // 合計金額など更新
+            optionsPrice = 0;
+            let totalirradiationsTime = 0;
+            selectedButtons.forEach(btn => {
+                const price = parseInt(btn.getAttribute('data-price'), 10);
+                optionsPrice += price;
+
+                const irradiationName = btn.innerText;
+                const irradiationTime = irradiationsTimes[irradiationName] || 0;
+                totalirradiationsTime += irradiationTime;
+            });
+
+            selectedirradiationsTime = totalirradiationsTime;
+
+            fetchAvailability(currentDate);
+            updateDisplayInfo();
+        }
+
+        function updateTotalAmount() {
+            totalAmount = menuPrice + optionsPrice; // オプションの価格も含める
+            updateDisplayInfo(); // 表示を更新
+        }
+
+        function selectVisit(element) {
+            // 選択された日時をリセット
+            selectedFullDate = '';
+
+            document.getElementById('firstVisit').classList.remove('active');
+            document.getElementById('repeatVisit').classList.remove('active');
+            element.classList.add('active');
+            visitCount = element.innerText;
+
+            // 選択された訪問回数に対応する時間を取得
+            selectedVisitTime = visitTimes[visitCount];
+
+            console.log('選択された訪問回数の時間:', selectedVisitTime);
+
+            // カレンダーを更新するために取得する日付を渡す
+            fetchAvailability(currentDate);
+        }
+
+        // メニューの選択を保存する関数
+        function selectMenu(element) {
+            element.classList.toggle('selected');
+
+            let selectedMenus = JSON.parse(localStorage.getItem('selectedMenus') || '[]');
+            const menuId = element.id;
+
+            if (element.classList.contains('selected')) {
+                selectedMenus.push(menuId);
+            } else {
+                selectedMenus = selectedMenus.filter(id => id !== menuId);
+            }
+
+            localStorage.setItem('selectedMenus', JSON.stringify(selectedMenus));
+        }
+
+        function showMenu(menu) {
+            // treatment-text を非表示にする
+            document.getElementById("treatment-text").style.display = "none";
+
+            // 選択されたメニューの名前を取得
+            let selectedButton = document.querySelector(`.menu-sections button[onclick="showMenu('${menu}')"]`);
+
+            if (selectedButton) {
+                selectedMenu = selectedButton.innerText;
+            }
+
+            // ✅ ローカルストレージにメニュー識別子を保存（追加）
+            localStorage.setItem('selectedMenu', menu); // ←この行を追加！
+
+            // すべてのメニューボタンの選択状態をリセット
+            document.querySelectorAll('.menu-sections button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // 選択されたメニューセクションを非表示＋ボタン状態リセット
+            document.querySelectorAll('.menu-section').forEach(section => {
+                section.classList.remove('active');
+                section.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+            });
+
+            // 対応するメニューボタンを選択状態にする
+            if (selectedButton) {
+                selectedButton.classList.add('active');
+                selectMenu(selectedButton);
+            }
+
+            // 選択されたメニューセクションを表示
+            document.getElementById(menu).classList.add('active');
+
+            // treatment-text の内容をリセット
+            document.getElementById("treatment-text").innerHTML = "";
+
+            // メニューとオプションをリセット
+            selectedSymptom = '';      // メニューのリセット
+            irradiationsCount = '';    // オプションのリセット
+            menuPrice = 0;             // メニューの価格リセット
+            optionsPrice = 0;          // オプションの価格リセット
+            totalAmount = 0;           // 合計金額リセット
+
+            // 表示を更新
+            updateDisplayInfo();
+        }
+
+        // ページ読み込み時にローカルストレージから選択状態を復元
+        document.addEventListener("DOMContentLoaded", () => {
+            let selectedMenus = JSON.parse(localStorage.getItem('selectedMenus') || '[]');
+            selectedMenus.forEach(menuId => {
+                let menuButton = document.getElementById(menuId);
+                if (menuButton) {
+                    menuButton.classList.add('selected');
+                }
+            });
+        });
+
+        function selectDate(cell) {
+            // "unavailable" クラスが付いている場合はクリックを無効化
+            if (cell.classList.contains('unavailable')) {
+                return; // 何もせずに終了
+            }
+
+            // 既に選択されているセルの選択を解除
+            const cells = document.querySelectorAll('.calendar td');
+            cells.forEach(td => td.classList.remove('selected'));
+
+            // 新しいセルを選択状態にする
+            cell.classList.add('selected');
+
+            // 選択された日付と時間を取得
+            const selectedDay = cell.getAttribute('data-date'); // ISO形式の日付
+            const selectedTime = cell.parentElement.firstChild.textContent; // 時間
+            const date = new Date(selectedDay);
+
+            // 日付部分を「○○年○○月○○日 ○○:○○」形式に変換
+            selectedFullDate = `${date.getFullYear()}年${('0' + (date.getMonth() + 1)).slice(-2)}月${('0' + date.getDate()).slice(-2)}日 ${selectedTime}`;
+
+            // 希望日時を即座に更新
+            updateDisplayInfo();
+        }
+
+        function submitForm() {
+            const formData = {
+                name: document.getElementById('name').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                visitCount: visitCount,
+                selectedMenu: selectedMenu,
+                selectedSymptom: selectedSymptom && selectedSymptom.length > 0 ? selectedSymptom : null, // 空の選択肢をチェック
+                irradiationsCount: irradiationsCount,
+                dates: [
+                    document.getElementById('date1').value,
+                    document.getElementById('date2').value,
+                    document.getElementById('date3').value
+                ],
+                message: document.getElementById('message').value.trim()
+            };
+
+            // フォームデータのチェック
+            if (!formData.name) {
+                alert('お名前を入力してください。');
+                return;
+            }
+
+            if (!formData.phone) {
+                alert('電話番号を入力してください。');
+                return;
+            }
+
+            if (!formData.selectedSymptom) {
+                alert('メニューを選択してください。');
+                return;
+            }
+
+            if (!formData.dates[0]) {
+                alert('第1希望日※必須を選択してください。');
+                return;
+            }
+
+            // LINEトークにメッセージを送信
+            liff.sendMessages([{
+                type: 'text',
+                text: `【予約フォーム】\n《お名前》\n${formData.name}\n《電話番号》\n${formData.phone}\n《ご来店回数》\n${formData.visitCount}\n\n《メニュー》\n・${formData.selectedSymptom}\n\n【希望日時】\n《第一希望日》\n${formatDate(formData.dates[0])}\n\n《第二希望日》\n${formatDate(formData.dates[1])}\n\n《第三希望日》\n${formatDate(formData.dates[2])}\n\n《メッセージ》\n${formData.message}`
+            }]).then(() => {
+                /* メッセージ送信成功時の処理 */
+                alert('確認してご連絡差し上げます。');
+                /* LIFFウィンドウを閉じる */
+                liff.closeWindow();
+            }).catch((err) => {
+                /* メッセージ送信失敗時の処理 */
+                console.error('メッセージの送信に失敗しました', err);
+            });
+        }
+
+        function formatDate(datetime) {
+            /* 日時文字列が空の場合は空文字を返す */
+            if (!datetime) return '';
+            /* 日時文字列をDateオブジェクトに変換 */
+            const date = new Date(datetime);
+            /* 年、月、日、時、分を取得しフォーマット */
+            const year = date.getFullYear();
+            const month = ('0' + (date.getMonth() + 1)).slice(-2);
+            const day = ('0' + date.getDate()).slice(-2);
+            const hours = ('0' + date.getHours()).slice(-2);
+            const minutes = ('0' + date.getMinutes()).slice(-2);
+            return `${year}年${month}月${day}日 ${hours}:${minutes}`;
+        }
+    </script>
+</body>
+
+</html>
